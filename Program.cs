@@ -10,8 +10,25 @@ namespace AdventOfCode2016
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Day8.Part1());
+            var day = new Day9();
+
+            try
+            {
+
+                Utils.WriteLine("** TESTS **", ConsoleColor.Red);
+                day.Test();
+                Utils.WriteLine("** PART 1 **", ConsoleColor.Red);
+                Utils.WriteLine(day.Part1(day.Input), ConsoleColor.Green);
+                Utils.WriteLine("** PART 2 **", ConsoleColor.Red);
+                Utils.WriteLine(day.Part2(day.Input), ConsoleColor.Green);
+
+            }
+            catch (NotImplementedException)
+            {
+            }
+
             Console.ReadLine();
+
         }
     }
 }

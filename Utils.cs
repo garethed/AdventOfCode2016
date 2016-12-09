@@ -12,5 +12,33 @@ namespace AdventOfCode2016
         {
             return input.Replace("\r", "").Split('\n').Select(l => l.Trim());
         }
+
+        public static void Test(Func<string, string> method, string[] inputs, string[] outputs)
+        {
+            bool failed = false;
+
+            for (int i = 0; i < inputs.Length; i++)
+            {
+                var actual = method(inputs[i]);
+                Console.Write(inputs[i] + " -> " + actual);
+                if (actual == outputs[i])
+                {
+                    WriteLine(" : OK", ConsoleColor.Green);
+                }
+                else
+                {
+                    WriteLine(" : WRONG. Should be " + outputs[i], ConsoleColor.Red);
+                    failed = true;
+                }
+            }
+        }
+
+        public static void WriteLine(string msg, ConsoleColor color)
+        {
+            var old = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = old;
+        }
     }
 }
