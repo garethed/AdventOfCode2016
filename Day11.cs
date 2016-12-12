@@ -21,11 +21,27 @@ namespace AdventOfCode2016
 
         public string Part1(string input)
         {
-            int[] state = ParseInput(input);
-            var previousState = new Dictionary<string, int>();
             minMoves = int.MaxValue;
 
-            tryMoves(previousState, state, 0);
+            int[] state = ParseInput(input);
+            var previousState = new Dictionary<string, int>();
+            var movequeue = new Queue<int[]>();
+            var depthqueue = new Queue<int>();
+
+            movequeue.Enqueue(state);
+            depthqueue.Enqueue(0);
+
+            int count = 0;
+
+            while (movequeue.Count > 0 && minMoves == int.MaxValue)
+            {
+                count++;
+
+                var nextstate = movequeue.Dequeue();
+                var nextDepth = depthqueue.Dequeue() + 1;
+
+                tryMoves(previousState, nextstate, nextDepth, movequeue, depthqueue);
+            }
 
             return minMoves.ToString();
         }
@@ -38,7 +54,7 @@ namespace AdventOfCode2016
             return string.Join("", state.Select(s => s.ToString()).ToArray());
         }
 
-        private void tryMoves(Dictionary<string, int> previousState, int[] state, int moves)
+        private void tryMoves(Dictionary<string, int> previousState, int[] state, int moves, Queue<int[]> nextStates, Queue<int> nextDepth)
         {
             if (iterations++ % 100 == 0)
             {
@@ -61,22 +77,22 @@ namespace AdventOfCode2016
                 {
                     int[] newState = doMove(state, delta, itemsToMove);
                     var stateString = StateString(newState);
-                    if (!previousState.ContainsKey(stateString) || previousState[stateString] > moves + 1)
+                    if (!previousState.ContainsKey(stateString))
                     {
-                        previousState[stateString] = moves + 1;
+                        previousState[stateString] = moves;
 
                         if (isValidState(newState))
                         {
                             if (isFinalState(newState))
                             {
-                                minMoves = moves + 1;
+                                minMoves = moves;
                                 Console.Write(minMoves);
                                 Console.CursorLeft = 0;
                             }
-                            else if (moves < minMoves - 1)
+                            else
                             {
-                                tryMoves(previousState, newState, moves + 1);
-                                //previousState.Pop();
+                                nextStates.Enqueue(newState);
+                                nextDepth.Enqueue(moves);
                             }
                         }
                         else
@@ -194,7 +210,7 @@ namespace AdventOfCode2016
 
         public string Part2(string input)
         {
-            throw new NotImplementedException();
+            return Part1("001122000002200");
         }
 
         public void Test()
