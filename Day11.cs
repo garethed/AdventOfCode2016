@@ -24,85 +24,124 @@ namespace AdventOfCode2016
             minMoves = int.MaxValue;
 
             int[] state = ParseInput(input);
-            var previousState = new Dictionary<string, int>();
-            var movequeue = new Queue<int[]>();
-            var depthqueue = new Queue<int>();
 
-            movequeue.Enqueue(state);
-            depthqueue.Enqueue(0);
+            var states = new Dictionary<int, int>();
+            var next = new Queue<int>();
 
-            int count = 0;
+            next.Enqueue(EncodeState(state));
+            states.Add(EncodeState(state), 0);
 
-            while (movequeue.Count > 0 && minMoves == int.MaxValue)
+
+            int[] target = new int[state.Length];
+            for (int j= 0; j < target.Length; j++)
             {
-                count++;
+                target[j] = 3;
+            }
+            int encodedTarget = EncodeState(target);
 
-                var nextstate = movequeue.Dequeue();
-                var nextDepth = depthqueue.Dequeue() + 1;
 
-                tryMoves(previousState, nextstate, nextDepth, movequeue, depthqueue);
+            var moves = 0;
+            var movesIncreasesAt = 0;
+
+            int i = 0;
+
+            while (next.Count > 0)
+            {
+
+                var nextstate = next.Dequeue();
+
+                if (tryMoves(states, next, nextstate, encodedTarget, state.Length))
+                {
+                    return (moves + 1).ToString();
+                }
+
+                if (movesIncreasesAt == i)
+                {
+                    moves++;
+                    movesIncreasesAt = states.Count - 1;
+                }
+
+                i++;
             }
 
-            return minMoves.ToString();
+            return "";
         }
 
-        private int iterations = 0;
-        private List<string> previous = new List<string>();
-
-        private string StateString(int[] state)
+        private int EncodeState(int[] state)
         {
-            return string.Join("", state.Select(s => s.ToString()).ToArray());
-        }
+            int ret = 0;
 
-        private void tryMoves(Dictionary<string, int> previousState, int[] state, int moves, Queue<int[]> nextStates, Queue<int> nextDepth)
-        {
-            if (iterations++ % 100 == 0)
+            for (int i = 0; i < state.Length; i++)
             {
-                // printState(state);
+                ret = ret << 2;
+                ret += state[i];
             }
+
+            return ret;
+
+        }
+
+        private int[] DecodeState(int encoded, int count)
+        {
+            var ret = new int[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                ret[count - i - 1] = encoded % 4;
+                encoded /= 4;
+            }
+
+            return ret;
+
+        }
+
+        private bool tryMoves(Dictionary<int, int> previousState, Queue<int> nextStates, int state, int target, int statesize)
+        {
+
+            int[] decodedState = DecodeState(state, statesize);
 
             int[] possibleDeltas = new int[] { 1, -1 };
-            if (state[0] == 3)
+
+            if (decodedState[0] == 3)
             {
                 possibleDeltas = new int[] { -1 };
             }
-            if (state[0] == 0)
+
+            if (decodedState[0] == 0)
             {
                 possibleDeltas = new int[] { 1 };
+
             }
+
 
             foreach (var delta in possibleDeltas)
             {
-                foreach (int[] itemsToMove in enumeratePossibleMoves(state))
+                foreach (int[] itemsToMove in enumeratePossibleMoves(decodedState))
                 {
-                    int[] newState = doMove(state, delta, itemsToMove);
-                    var stateString = StateString(newState);
-                    if (!previousState.ContainsKey(stateString))
+                    int[] newState = doMove(decodedState, delta, itemsToMove);
+                    int encoded = EncodeState(newState);
+                    if (!previousState.ContainsKey(encoded))
                     {
-                        previousState[stateString] = moves;
-
                         if (isValidState(newState))
                         {
-                            if (isFinalState(newState))
-                            {
-                                minMoves = moves;
+
+                            if (encoded == target)
+                            {                                
                                 Console.Write(minMoves);
                                 Console.CursorLeft = 0;
+                                return true;
                             }
                             else
                             {
-                                nextStates.Enqueue(newState);
-                                nextDepth.Enqueue(moves);
+                                previousState.Add(encoded, 0);
+                                nextStates.Enqueue(encoded);
                             }
-                        }
-                        else
-                        {
-                            previousState[stateString] = 0;
                         }
                     }
                 }
             }
-            
+
+            return false;       
         }
 
         private void printState(int[] state)
@@ -126,19 +165,6 @@ namespace AdventOfCode2016
             }
 
             Console.CursorTop = top;
-        }
-
-        private bool isFinalState(int[] newState)
-        {
-            for (int i = 1; i < newState.Length; i++)
-            {
-                if (newState[i] != 3)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         private bool isValidState(int[] state)
