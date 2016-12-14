@@ -100,9 +100,7 @@ jnz c -5";
         public string Part2(string input)
         {
             return Part1("cpy 1 c\n" + input);
-        }
-
-        
+        }        
 
         private class Value
         {
