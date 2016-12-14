@@ -69,6 +69,8 @@ namespace AdventOfCode2016
 
         private int EncodeState(int[] state)
         {
+            state = NormaliseState(state);
+
             int ret = 0;
 
             for (int i = 0; i < state.Length; i++)
@@ -94,6 +96,53 @@ namespace AdventOfCode2016
             return ret;
 
         }
+
+        private int[] NormaliseState(int[] state)
+        {
+            int tmp, prev, offsetprev;
+            bool madechanges = true;
+
+            int offset = (state.Length - 1) / 2;
+
+            while (madechanges)
+            {
+                prev = state[1];
+
+                offsetprev = state[1 + offset];
+
+                madechanges = false;
+
+                for (int i = 2; i < offset + 1; i++)
+                {
+                    if (state[i] > prev)
+                    {
+                        madechanges = true;
+
+                        tmp = state[i];
+                        state[i] = state[i - 1];
+                        state[i - 1] = tmp;
+
+                        tmp = state[i + offset];
+                        state[i + offset] = state[i + offset - 1];
+                        state[i + offset - 1] = tmp;
+                    }
+                    else if (state[i] == prev && state[i + offset] > offsetprev)
+                    {
+                        madechanges = true;
+
+                        tmp = state[i + offset];
+                        state[i + offset] = state[i + offset - 1];
+                        state[i + offset - 1] = tmp;
+                    }
+
+                    prev = state[i];
+                    offsetprev = state[i + offset];
+                }
+            }
+
+            return state;
+        }
+
 
         private bool tryMoves(Dictionary<int, int> previousState, Queue<int> nextStates, int state, int target, int statesize)
         {
@@ -185,13 +234,10 @@ namespace AdventOfCode2016
                     {
                         return false;
                     }
-
                 }
-
             }
 
             return true;
-
         }
 
         private int[] doMove(int[] state, int delta, int[] itemsToMove)

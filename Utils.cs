@@ -40,6 +40,7 @@ namespace AdventOfCode2016
 
         public static void WriteLine(string msg, ConsoleColor color)
         {
+            Console.WriteLine();
             var old = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Console.WriteLine(msg);
