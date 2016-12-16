@@ -8,7 +8,7 @@ namespace AdventOfCode2016
 {
     class Day12 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -38,7 +38,7 @@ jnz c -5";
             }
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             var instructions = new Dictionary<string, Action<Value, Value, Value>>()
             {
@@ -97,7 +97,7 @@ jnz c -5";
             return new Value(int.Parse(v));            
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             return Part1("cpy 1 c\n" + input);
         }        

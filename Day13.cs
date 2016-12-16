@@ -8,7 +8,7 @@ namespace AdventOfCode2016
 {
     class Day13 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -16,9 +16,9 @@ namespace AdventOfCode2016
             }
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
-            var inputs = input.Split(',').Select(i => int.Parse(i)).ToArray();
+            var inputs = ((string)input).Split(',').Select(i => int.Parse(i)).ToArray();
             var target = encode(inputs[1], inputs[2]);
             var seed = inputs[0];
 
@@ -109,9 +109,9 @@ namespace AdventOfCode2016
             y = (int) value % 10000;
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
-            var inputs = input.Split(',').Select(i => int.Parse(i)).ToArray();
+            var inputs = ((string)input).Split(',').Select(i => int.Parse(i)).ToArray();
             var maxdepth = 50; //inputs[1];
             var seed = inputs[0];
 

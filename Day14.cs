@@ -8,7 +8,7 @@ namespace AdventOfCode2016
 {
     class Day14 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -16,11 +16,11 @@ namespace AdventOfCode2016
             }
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             return FindKeys(input, 1);
         }
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             return FindKeys(input, 2017);
         }

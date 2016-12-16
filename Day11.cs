@@ -8,7 +8,7 @@ namespace AdventOfCode2016
 {
     class Day11 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -19,11 +19,11 @@ namespace AdventOfCode2016
 
         static int minMoves = int.MaxValue;
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             minMoves = int.MaxValue;
 
-            int[] state = ParseInput(input);
+            int[] state = ParseInput((string)input);
 
             var states = new Dictionary<int, int>();
             var next = new Queue<int>();
@@ -280,7 +280,7 @@ namespace AdventOfCode2016
             return input.Select(c => int.Parse(c.ToString())).ToArray();
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             return Part1("001122000002200");
         }

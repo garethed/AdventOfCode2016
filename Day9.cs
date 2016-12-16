@@ -17,12 +17,12 @@ namespace AdventOfCode2016
             CollectingSequence
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             return Decode1(input).Length.ToString();
         }
 
-        private string Decode1(string input)
+        private string Decode1(dynamic input)
         {
             int pos = 0;
             state state = state.Default;
@@ -92,7 +92,7 @@ namespace AdventOfCode2016
             return output.ToString();
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             int pos = 0;
             state state = state.Default;
@@ -177,7 +177,7 @@ namespace AdventOfCode2016
 
         }
 
-        public string Input
+        public dynamic Input
         {
             get
             {

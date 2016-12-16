@@ -10,9 +10,9 @@ namespace AdventOfCode2016
     {
         void Test();
 
-        string Part1(string input);
-        string Part2(string input);
+        string Part1(dynamic input);
+        string Part2(dynamic input);
 
-        string Input { get; }
+        dynamic Input { get; }
     }
 }

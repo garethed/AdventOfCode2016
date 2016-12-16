@@ -8,7 +8,7 @@ namespace AdventOfCode2016
 {
     class Day15 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -22,7 +22,7 @@ Disc #6 has 19 positions; at time=0, it is at position 7.";
             }
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             var positions = new List<int>();
             var sizes = new List<int>();
@@ -51,7 +51,7 @@ Disc #6 has 19 positions; at time=0, it is at position 7.";
             return steps.ToString();            
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             return Part1(input + "\nDisc #7 has 11 positions; at time=0, it is at position 0.");
         }

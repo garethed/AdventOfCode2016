@@ -11,7 +11,7 @@ namespace AdventOfCode2016
         static int match1 = 61;
         static int match2 = 17;
 
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -249,7 +249,7 @@ bot 6 gives low to bot 27 and high to bot 37";
             }
         }
 
-        public string Part1(string input)
+        public string Part1(dynamic input)
         {
             match1 = 61;
             match2 = 17;
@@ -258,14 +258,14 @@ bot 6 gives low to bot 27 and high to bot 37";
 
         }
 
-        private string RunBots(string input)
+        private string RunBots(dynamic input)
         {
             outputs.Clear();
 
             try
             {
 
-                foreach (var instruction in Utils.splitLines(input).OrderBy(i => i))
+                foreach (var instruction in Utils.splitLines((string)input).OrderBy(i => i))
                 {
                     var parts = instruction.Split(' ');
 
@@ -287,7 +287,7 @@ bot 6 gives low to bot 27 and high to bot 37";
             return "";
         }
 
-        public string Part2(string input)
+        public string Part2(dynamic input)
         {
             match1 = -1;
             match2 = -1;
@@ -302,7 +302,7 @@ bot 6 gives low to bot 27 and high to bot 37";
             match1 = 3;
             match2 = 5;
 
-            Utils.Test(RunBots, new string[]
+            Utils.Test(RunBots, new []
             {
                 @"value 5 goes to bot 2
 bot 2 gives low to bot 1 and high to bot 0

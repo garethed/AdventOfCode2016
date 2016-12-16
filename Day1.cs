@@ -9,7 +9,7 @@ namespace AdventOfCode2016
 {
     class Day1 : Day
     {
-        public string Input
+        public dynamic Input
         {
             get
             {
@@ -23,7 +23,7 @@ namespace AdventOfCode2016
             Debug.Assert(Part2("R8, R4, R4, R8") == "4");
         }
 
-        public string Part2(string steps)
+        public string Part2(dynamic steps)
         {
 
             var visited = new List<string>();
@@ -71,7 +71,7 @@ namespace AdventOfCode2016
             return "";
         }
 
-        public string Part1(string steps)
+        public string Part1(dynamic steps)
         {
             var x = 0;
             var y = 0;
