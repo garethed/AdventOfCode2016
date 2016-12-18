@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,14 @@ namespace AdventOfCode2016
                     WriteLine(" : WRONG. Should be " + outputs[i], ConsoleColor.Red);
                 }
             }
+        }
+
+        static MD5 md5 = System.Security.Cryptography.MD5.Create();
+
+
+        public static string MD5(string input)
+        {
+            return BitConverter.ToString(md5.ComputeHash(Encoding.ASCII.GetBytes(input))).Replace("-", "").ToLower();
         }
 
         public static void WriteLine(string msg, ConsoleColor color)
