@@ -58,5 +58,11 @@ namespace AdventOfCode2016
             Console.Write(new string(' ', Console.WindowWidth));
             Console.CursorLeft = 0;
         }
+
+        public static void WriteTransient(string msg)
+        {
+            Console.Write(msg);
+            Console.CursorLeft = 0;
+        }
     }
 }
