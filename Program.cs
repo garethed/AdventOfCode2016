@@ -10,7 +10,7 @@ namespace AdventOfCode2016
     {
         static void Main(string[] args)
         {
-            var day = new Day22();
+            var day = new Day24();
 
             try
             {
