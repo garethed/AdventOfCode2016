@@ -68,7 +68,7 @@ namespace AdventOfCode2016
                 {
                     route.print();
 
-                    return route.steps.Count.ToString();
+                    return (route.steps.Count(c => c == '>') - 2).ToString();
                 }                
             }
 
@@ -77,11 +77,11 @@ namespace AdventOfCode2016
 
         private Route extend(Route route, Queue<Route> queue)
         {
-            var node = route.steps.Any() ? route.steps.Last().to : route.start;
+            var node = route.head;
             if (node.ID.HasValue)
             {
-                route.target.Remove(node.ID.Value);
-                if (route.target.Count == 0)
+                route.target = route.target.Replace(node.ID.Value.ToString(), "");
+                if (route.target.Length == 0)
                 {
                     return route;
                 }
@@ -89,7 +89,7 @@ namespace AdventOfCode2016
 
             foreach (Step step in node.steps)
             {
-                if (!route.steps.Contains(step))
+                if (route.steps.IndexOf("->" + step.from.x + "," + step.from.y + "->" + step.to.x + "," + step.to.y + "->") < 0)
                 {
                     queue.Enqueue(route.extend(step));
                 }
@@ -187,17 +187,18 @@ namespace AdventOfCode2016
 
         private class Route
         {
-            internal List<Step> steps = new List<Step>();
-            public Node start;
-            public HashSet<int> target;
+            internal string steps = "->";
+            public Node head;
+            public string target;
 
             public Route(Node start, int target)
             {
-                this.start = start;
-                this.target = new HashSet<int>();
+                this.head = start;
+                this.steps += start.x + "," + start.y + "->";
+                this.target = "";
                 for (int i = 0; i < target; i++)
                 {
-                    this.target.Add(i);
+                    this.target = this.target + i.ToString();
                 }
             }
 
@@ -207,22 +208,16 @@ namespace AdventOfCode2016
             {
                 var extended = new Route()
                 {
-                    steps = new List<Step>(steps),
-                    start = start,
-                    target = new HashSet<int>(target)
+                    steps = steps + step.to.x + "," + step.to.y + "->",
+                    head = step.to,
+                    target = target
                 };
-                extended.steps.Add(step);
                 return extended;
             }
 
             internal void print()
             {
-                Console.Write(start);
-                foreach (var step in steps)
-                {
-                    Console.Write("->" + step.to);
-                }
-                Console.WriteLine();
+                Console.WriteLine(steps);
             }
         }
         private struct Step
