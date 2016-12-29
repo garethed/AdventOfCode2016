@@ -54,25 +54,54 @@ namespace AdventOfCode2016
 
         public string Part1(dynamic input)
         {
+            return FindRoute(input, false);
+        }
+
+        public string FindRoute(string input, bool returnToStart)
+        { 
             var map = ParseMap((string)input);
             var target = map.Count(n => n.ID.HasValue);
+            var start = map.Where(n => n.ID == 0).First();
 
-            var queue = new Queue<Route>();
-            queue.Enqueue(new Route(map.Where(n => n.ID == 0).First(), target));
+            var targets = new List<Node>();
+            List<Node> best = null;
 
-            Route route = null;
-
-            while (queue.Count > 0)
+            for (int i = 1; i < target; i++)
             {
-                if ((route = extend(queue.Dequeue(), queue)) != null)
-                {
-                    route.print();
-
-                    return (route.steps.Count(c => c == '>') - 2).ToString();
-                }                
+                targets.Add(map.Where(n => n.ID == i).First());
             }
 
-            return "bother";
+            enumerateTargets(targets, new List<Node>() { start }, ref best, returnToStart);
+
+            return (best.Count - 1).ToString();
+
+        }
+
+        private void enumerateTargets(List<Node> targets, List<Node> route, ref List<Node> best, bool returnToStart)
+        {
+            var lastNode = route.Last();
+
+            foreach (var n in targets)
+            {
+                var extendedRoute = new List<Node>(route);
+                var newtargets = new List<Node>(targets);
+                newtargets.Remove(n);
+                extendedRoute.AddRange(shortestRoute(lastNode, n));
+
+                if (newtargets.Count == 0)
+                {
+                    if (returnToStart)
+                    {
+                        extendedRoute.AddRange(shortestRoute(n, route[0]));
+                    }
+                    if (best == null || best.Count > extendedRoute.Count)
+                    {
+                        best = extendedRoute;
+                    }
+                }
+
+                enumerateTargets(newtargets, extendedRoute, ref best, returnToStart);
+            }
         }
 
         private Route extend(Route route, Queue<Route> queue)
@@ -149,7 +178,7 @@ namespace AdventOfCode2016
 
         public string Part2(dynamic input)
         {
-            throw new NotImplementedException();
+            return FindRoute(input, true);
         }
 
         public void Test()
@@ -160,6 +189,60 @@ namespace AdventOfCode2016
 #.#######.#
 #4.......3#
 ###########", "14");
+        }
+
+        private Dictionary<Tuple<Node, Node>, List<Node>> routeCache = new Dictionary<Tuple<Node, Node>, List<Node>>();
+
+        private List<Node> shortestRoute(Node start, Node finish)
+        {
+            var cacheKey = Tuple.Create(start, finish);
+
+            if (routeCache.ContainsKey(cacheKey))
+            {
+                return routeCache[cacheKey];
+            }
+
+            var used = new Dictionary<Node, List<Node>>();
+            var queue = new Queue<Node>();
+
+            queue.Enqueue(start);
+            used[start] = new List<Node>();
+
+            bool found = false;
+
+            while (queue.Count > 0 && !found)
+            {
+                var next = queue.Dequeue();
+                found = extendFrom(next, finish, used, queue);
+            }
+
+            var route = used[finish];
+
+            routeCache[cacheKey] = route;
+
+            return route;
+        }
+
+        private bool extendFrom(Node next, Node target, Dictionary<Node, List<Node>> used, Queue<Node> queue)
+        {
+            foreach (var adjacent in next.steps)
+            {
+                if (!used.ContainsKey(adjacent.to))
+                {
+                    var route = new List<Node>(used[next]);
+                    route.Add(adjacent.to);
+                    used[adjacent.to] = route;
+
+                    queue.Enqueue(adjacent.to);
+
+                    if (next == target)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private class Node
